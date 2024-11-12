@@ -136,7 +136,8 @@
             <li><button onclick="app.loadTool('ecuacionesDiferenciales')">Ecuaciones Diferenciales</button></li>
             <li><button onclick="app.loadTool('analisisNumerico')">Análisis Numérico</button></li>
             <li><button onclick="app.loadTool('g_Geogebra')">Geogebra Clasico</button></li>
-            <li><button onclick="app.loadTool('g_Demos')">Desmos Gráfica</button></li>
+            <li><button onclick="app.loadTool('g_Demos')">Desmos Gráfica 2D</button></li>
+            <li><button onclick="app.loadTool('g_Demos2')">Desmos Gráfica 3D</button></li>
             <li><button onclick="app.loadTool('Demos_Calculadora')">Calculadora Científica Desmos</button></li>
         </ul>
     </div>
@@ -244,7 +245,7 @@
 
                     case 'g_Demos':
                         content = `
-                            <h2>Graficadora Desmos</h2>
+                            <h2>Graficadora 2D Desmos</h2>
                             <iframe 
                                 src="https://www.desmos.com/calculator?lang=es" 
                                 width="100%" 
@@ -254,6 +255,23 @@
                             </iframe>
                         `;
                         break;
+
+
+                    case 'g_Demos2':
+                        content = `
+                            <h2>Graficadora 3D Desmos</h2>
+                            <iframe 
+                                src="https://www.desmos.com/3d?lang=es" 
+                                width="100%" 
+                                height="500px" 
+                                style="border: 1px solid #ccc" 
+                                frameborder="0">
+                            </iframe>
+                        `;
+                        break;
+
+
+
 
                     case 'g_GeogebraProb':
                         content = `
