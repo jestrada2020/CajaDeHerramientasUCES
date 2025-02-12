@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.12.0/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -157,9 +158,11 @@
         <div class="list-group">
             <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('welcome')">Inicio</button>
             <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('AlgebraElemental1')">Algebra básica</button>
+            <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('trigo1')">Trigonometría básica</button>
             <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('Determinantes')">Sistemas 2 por 2 y Determinante 2 por 2</button>
             <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('matrices')">Multiplicación de Matrices</button>
             <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('gauss-jordan')">Método Gauss-Jordan</button>
+            <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('g_Geogebra')">Geogebra Clasico</button>
         </div>
     </div>
 
@@ -287,6 +290,76 @@
 
             </div>        
         </div>
+
+
+
+        <div id="trigo1" class="tool-container" style="display: none;">
+            <div class="function-section">
+                <h2>Bienvenido a la Trigonometría básica </h2>
+
+
+                <p>Calcula funciones trigonométricas.</p>
+                <input type="number" id="angle" placeholder="Ingresa un ángulo en grados">
+                <select id="trigFunction">
+                    <option value="sin">Seno</option>
+                    <option value="cos">Coseno</option>
+                    <option value="tan">Tangente</option>
+                    <option value="csc">Cosecante</option>
+                    <option value="sec">Secante</option>
+                    <option value="cot">Cotangente</option>
+                </select>
+                <div class="precision-control">
+                    <label for="trigPrecision">Precisión:</label>
+                    <input type="number" id="trigPrecision" value="5" min="0" max="15">
+                </div>
+                <button onclick="trigo1.calculateTrig()">Calcular</button>
+                <p id="trigResult" class="result"></p>
+
+            </div>
+        </div>
+
+
+
+        <div id="g_Geogebra" class="tool-container" style="display: none;">
+            <div class="function-section">
+                <h2>Bienvenido al kit de Geogebra Clasico</h2>
+
+                
+                <h2>Aplicaciónes Geogebra </h2>
+                
+                <p> </p>
+                <a href="https://www.geogebra.org/classic?lang=yi" target="_blank" class="button">
+                    Abrir GeoGebra Geometría
+                </a>
+
+                <p> </p>
+
+                <a href="https://www.geogebra.org/cas?lang=es" target="_blank" class="button">
+                    Abrir GeoGebra Simbólico
+                </a>
+
+
+                <p> </p>
+
+                <a href=" https://www.geogebra.org/m/D753wjWN" target="_blank" class="button">
+                    Abrir GeoGebra Estadístico
+                </a>
+
+
+
+
+
+
+
+
+               
+            </div>
+        </div>
+
+        
+        
+        
+
 
 
         <div id="Determinantes" class="tool-container" style="display: none;">
@@ -504,7 +577,7 @@
         const app = {
             currentTool: 'welcome',
             loadTool(tool) {
-                ['welcome','AlgebraElemental1','Determinantes', 'matrices', 'gauss-jordan'].forEach(t => {
+                ['welcome','AlgebraElemental1','trigo1','Determinantes', 'matrices', 'gauss-jordan','g_Geogebra'].forEach(t => {
                     document.getElementById(t).style.display = t === tool ? 'block' : 'none';
                 });
                 this.currentTool = tool;
@@ -654,6 +727,107 @@
             },
 
         };
+
+
+
+
+        const trigo1 ={
+
+            calculateTrig() {
+                const angle = parseFloat(document.getElementById('angle').value);
+                const functionType = document.getElementById('trigFunction').value;
+                const precision = parseInt(document.getElementById('trigPrecision').value);
+                const resultElement = document.getElementById('trigResult');
+
+                if (isNaN(angle)) {
+                    resultElement.textContent = 'Por favor, ingresa un ángulo válido.';
+                    return;
+                }
+
+                let result;
+                const radians = angle * (Math.PI / 180);
+                switch (functionType) {
+                    case 'sin':
+                        result = Math.sin(radians);
+                        break;
+                    case 'cos':
+                        result = Math.cos(radians);
+                        break;
+                    case 'tan':
+                        result = Math.tan(radians);
+                        break;
+                    case 'csc':
+                        result = 1 / Math.sin(radians);
+                        break;
+                    case 'sec':
+                        result = 1 / Math.cos(radians);
+                        break;
+                    case 'cot':
+                        result = 1 / Math.tan(radians);
+                        break;
+                    default:
+                        resultElement.textContent = 'Función no válida.';
+                        return;
+                }
+
+                resultElement.textContent = `Resultado: ${result.toFixed(precision)}`;
+            },
+        };
+
+
+
+        const g_Geogebra ={
+
+            initGeogebra() {
+                var params = {
+                    "appName": "OOR7QQOe",
+                    "width": 800,
+                    "height": 600,
+                    "showToolBar": true,
+                    "showAlgebraInput": true,
+                    "showMenuBar": true,
+                    "showResetIcon": true,
+                    "enableLabelDrags": false,
+                    "enableShiftDragZoom": true,
+                    "enableRightClick": false,
+                    "showToolBarHelp": false,
+                    "errorDialogsActive": true,
+                    "useBrowserForJS": true,
+                    "allowStyleBar": false,
+                    "preventFocus": false,
+                    "showZoomButtons": true,
+                    "capturingThreshold": 3,
+                    "showFullscreenButton": true,
+                    "scale": 1,
+                    "disableAutoScale": false,
+                    "language": "es",
+                    "borderColor": "#ccc",
+                    "buttonShadows": false,
+                    "buttonRounding": 0.7
+                };
+
+                var applet = new GGBApplet(params, true);
+                applet.inject('ggb-element');
+            
+                if (typeof GGBApplet === 'undefined') {
+                    const script = document.createElement('script');
+                    script.src = 'https://www.geogebra.org/apps/deployggb.js';
+                    script.async = true;
+                    script.onload = function() {
+                        setTimeout(initGeogebra, 100); // Pequeño retraso para asegurar que todo esté cargado
+                    };
+                    script.onerror = function() {
+                        document.getElementById('ggb-element').innerHTML = 
+                            '<p>Error al cargar Geogebra. Por favor, revise su conexión a internet y recargue la página.</p>';
+                    };
+                    document.head.appendChild(script);
+                } else {
+                    setTimeout(initGeogebra, 100);
+                }
+            
+            },
+        };
+
 
 
 
