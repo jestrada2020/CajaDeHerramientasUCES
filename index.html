@@ -4,586 +4,827 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kit de Matemáticas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.12.0/math.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.12.0/lib/browser/math.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #0c0a09;
-            --background-color: #f8f9fa;
-            --text-color: #2c3e50;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #6366f1;
+            --accent: #0c0a09;
+            --background: #f9fafb;
+            --text: #1f2937;
+            --card: #ffffff;
+            --sidebar: #f3f4f6;
+            --sidebar-hover: #e5e7eb;
         }
+        
+        .dark {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #8b5cf6;
+            --accent: #f3f4f6;
+            --background: #111827;
+            --text: #f9fafb;
+            --card: #1f2937;
+            --sidebar: #1f2937;
+            --sidebar-hover: #374151;
+        }
+        
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
         }
+        
         body {
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
             min-height: 100vh;
-            display: flex;
         }
+        
         #sidebar {
-            width: 250px;
-            background: white;
-            padding: 2rem 1.5rem;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            position: fixed;
-            height: 100vh;
+            background-color: var(--sidebar);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        #sidebar h2 {
-            color: var(--primary-color);
-            margin-bottom: 2rem;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        #sidebar ul {
-            list-style: none;
-        }
-        #sidebar li {
-            margin-bottom: 0.75rem;
-        }
-        #sidebar button {
+        
+        .sidebar-button {
             width: 100%;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 8px;
-            background: var(--secondary-color);
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+            color: var(--text);
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-button:hover {
+            background-color: var(--sidebar-hover);
+            transform: translateY(-1px);
+        }
+        
+        .sidebar-button.active {
+            background-color: var(--primary);
             color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
         }
-        #sidebar button:hover {
-            background: #2980b9;
+        
+        .sidebar-button i {
+            margin-right: 0.75rem;
+            width: 1.5rem;
+            text-align: center;
+        }
+        
+        .card {
+            background-color: var(--card);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .card:hover {
             transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        #content {
-            flex: 1;
-            margin-left: 250px;
-            padding: 3rem;
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+            font-size: 1.25rem;
         }
-        .tool-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .function-section {
-            background: white;
-            border-radius: 12px;
+        
+        .card-body {
             padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
         }
-        .function-section h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
+        
         input, select {
             width: 100%;
             padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
             margin-bottom: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            transition: border-color 0.3s ease;
+            background-color: var(--background);
+            color: var(--text);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
+        
         input:focus, select:focus {
             outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
         }
-        button {
-            background: var(--secondary-color);
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
         }
-        button:hover {
-            background: #2980b9;
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
             transform: translateY(-1px);
         }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+        }
+        
+        .btn-secondary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
         .result {
             margin-top: 1rem;
             padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 6px;
-            font-family: monospace;
-            color: var(--accent-color);
+            background-color: var(--background);
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
         }
-        .matrix-columns {
+        
+        .matrix-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
+            gap: 1.5rem;
         }
-        .matrix-column {
-            border: 1px solid #ddd;
-            padding: 1rem;
-            border-radius: 8px;
+        
+        .matrix-table {
+            border-collapse: separate;
+            border-spacing: 5px;
         }
-        .matrix-column h4 {
-            margin-bottom: 1rem;
+        
+        .matrix-table input {
+            width: 80px;
+            text-align: center;
         }
+        
         @media (max-width: 768px) {
-            body {
+            #main-layout {
                 flex-direction: column;
             }
+            
             #sidebar {
                 width: 100%;
                 height: auto;
-                position: relative;
-                padding: 1.5rem;
+                position: static;
+                padding: 1rem;
             }
+            
             #content {
                 margin-left: 0;
-                padding: 2rem 1.5rem;
+                padding: 1.5rem;
             }
-            .matrix-columns {
+            
+            .matrix-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .sidebar-button {
+                padding: 0.6rem 1rem;
+                margin-bottom: 0.4rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .matrix-grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .matrix-grid-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            z-index: 100;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1.25rem;
         }
     </style>
 </head>
 <body>
-    <div id="sidebar">
-        <h2>Kit de Matemáticas Uno</h2>
-        <div class="list-group">
-            <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('welcome')">Inicio</button>
-            <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('AlgebraElemental1')">Algebra básica</button>
-            <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('trigo1')">Trigonometría básica</button>
-            <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('Determinantes')">Sistemas 2 por 2 y Determinante 2 por 2</button>
-            <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('matrices')">Multiplicación de Matrices</button>
-            <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('gauss-jordan')">Método Gauss-Jordan</button>
-            <button class="list-group-item list-group-item-action mb-2" onclick="app.loadTool('g_Geogebra')">Geogebra Clasico</button>
-        </div>
-    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
 
-    <div id="content">
-        <div id="welcome" class="tool-container">
-            <div class="function-section">
-                <h2>Bienvenido al kit de  Matemáticas</h2>
-                        <h3>Introducción a la Caja de Herramientas</h3>
-                        <p>Hace algún tiempo el profesor Carlos Andrés Escobar Guerra propuso la creación de unas cartillas para los cursos de matemáticas de la facultad de Ciencias y Biotecnología, la elaboración de las cartillas produjo la necesidad de tener las herramientas para desarrollar las actividades de dicha cartilla.</p>
-                        <p>Así es que se llegó a la creación de una caja de herramientas donde se encontraran aplicaciones de aritmética, matemáticas I, II y III, y aplicaciones más avanzadas, la caja de herramientas hace más dinámica la clase, hace que los estudiantes adquieran los saberes esenciales más rápidamente, depende del profesor y de los estudiantes no pasar por alto los detalles que conducen a la solución.</p>
-                        <p>Para solucionar muchos de los ejercicios y problemas no es necesario ser un gran estudiante en matemáticas, eso sí, debe saber interiorizar, entender los conceptos que ayudan a solucionar el problema y en la caja de herramientas encontrará los instrumentos que le ayudaran a solucionar los problemas; depende del alumno escoger la herramienta adecuada.</p>
-                        <p>Otra ventaja de la caja de herramientas es que las aplicaciones se pueden encontrar en un sólo espacio virtual y diseñadas de acuerdo a las necesidades de nuestros estudiantes, para la construcción de las herramientas se utilizó R, LaTeX, Flexdashboard, Bookdown, Shiny, y Geogebra.</p>
-                        <p>Se puede decir que el equipo de trabajo está conformado por el profesor Carlos Andrés Escobar Guerra, Pablo Andrés Guzmán, John Jairo Estrada Álvarez y Juan Albero Arias Quiceno. Gracias a la invaluable ayuda del profesor de estadística y programación Pablo Andrés Guzmán puesto que él inspiró la creación de un grupo de estudio en el cual compartía sus conocimientos de R, de otros programas y actualmente da su opinión acerca de las nuevas aplicaciones. John Jairo Estrada, el cerebro del proyecto, es el programador de todas las aplicaciones.</p>
-                <p>Selecciona una herramienta del menú lateral para comenzar.</p>
+    <div id="main-layout" class="flex min-h-screen">
+        <!-- Sidebar -->
+        <div id="sidebar" class="w-64 fixed h-full overflow-y-auto py-8 px-4">
+            <h2 class="text-2xl font-bold mb-8 text-center">Kit de Matemáticas</h2>
+            
+            <div class="space-y-2">
+                <button class="sidebar-button active" onclick="app.loadTool('welcome')">
+                    <i class="fas fa-home"></i> Inicio
+                </button>
+                <button class="sidebar-button" onclick="app.loadTool('AlgebraElemental1')">
+                    <i class="fas fa-superscript"></i> Álgebra Básica
+                </button>
+                <button class="sidebar-button" onclick="app.loadTool('trigo1')">
+                    <i class="fas fa-chart-line"></i> Trigonometría
+                </button>
+                <button class="sidebar-button" onclick="app.loadTool('Determinantes')">
+                    <i class="fas fa-calculator"></i> Sistemas 2×2
+                </button>
+                <button class="sidebar-button" onclick="app.loadTool('matrices')">
+                    <i class="fas fa-th"></i> Multiplicación Matrices
+                </button>
+                <button class="sidebar-button" onclick="app.loadTool('gauss-jordan')">
+                    <i class="fas fa-table"></i> Método Gauss-Jordan
+                </button>
+                <button class="sidebar-button" onclick="app.loadTool('g_Geogebra')">
+                    <i class="fas fa-compass"></i> Geogebra Clásico
+                </button>
+            </div>
+            
+            <div class="mt-auto pt-8 text-center text-sm opacity-75">
+                <p>© 2023 Kit de Matemáticas</p>
+                <p class="mt-2">Desarrollado por el equipo de Matemáticas</p>
             </div>
         </div>
 
-        <script>
-            window.difyChatbotConfig = {
-             token: 'y6UksCo4qSgum9Yc'
-            }
-           </script>
-           <script
-            src="https://udify.app/embed.min.js"
-            id="y6UksCo4qSgum9Yc"
-            defer>
-           </script>
-           <style>
-             #dify-chatbot-bubble-button {
-               background-color: #1C64F2 !important;
-             }
-             #dify-chatbot-bubble-window {
-               width: 24rem !important;
-               height: 40rem !important;
-             }
-           </style>
-
-        
-        <div id="AlgebraElemental1" class="tool-container" style="display: none;">
-            <div class="function-section">
-                <h2>Bienvenido al álgebra básica (ó álgebra elemental)</h2>
-
-
-                <div class="matrix-columns">
-                    <div class="matrix-column">
-                        <h4>Función polinómica</h4> 
-                        <div class="mb-4">
-                            <p>Ingresa una función algebraica y evalúala para un valor específico de x.</p>
-                        <div class="function-evaluator">
-                            <input 
-                                type="text" 
-                                id="functionExpression" 
-                                placeholder="Ingresa una función (ejemplo: 2*x^2 + 3*x - 1)"
-                                pattern="[-+*/^().\dx\s]+"
-                                required
-                            >
-                        </div>
-                                <input 
-                                    type="number" 
-                                    id="xValue" 
-                                    placeholder="Valor de x"
-                                    required
-                                >
-                        <div class="precision-control">
-                            <label for="polynomialPrecision">Precisión (0-15):</label>
-                            <input 
-                                type="number" 
-                                id="polynomialPrecision" 
-                                value="0" 
-                                min="0" 
-                                max="15"
-                                required
-                            >
-                        </div>
-                        <button onclick="AlgebraElemental1.evaluateFunction()">Evaluar</button>
-                        <p id="polynomialResult" class="result"></p>
-                        </div>       
+        <!-- Main Content -->
+        <div id="content" class="flex-1 ml-64 p-8">
+            <!-- Welcome Section -->
+            <div id="welcome" class="max-w-4xl mx-auto">
+                <div class="card">
+                    <div class="card-header flex items-center">
+                        <i class="fas fa-book-open mr-3 text-primary"></i>
+                        <h2>Bienvenido al Kit de Matemáticas</h2>
                     </div>
-
-
-
-                    <div class="matrix-column">
-                        <h4>Función Racional</h4>
-                        <div class="mb-4">
-                            <p>Ingresa el numerador y denominador de la función racional en términos de x, y evalúala para un valor específico de x.</p>
-                            <input type="text" id="numeratorExpression" placeholder="Ingresa el numerador (por ejemplo: x^2 + 3)">
-                            <input type="text" id="denominatorExpression" placeholder="Ingresa el denominador (por ejemplo: x - 2)">
-                            <input type="number" id="xValueRational" placeholder="Valor de x">
-                            <div class="precision-control">
-                                <label for="rationalPrecision">Precisión:</label>
-                                <input type="number" id="rationalPrecision" value="0" min="0" max="15">
-                            </div>
-                            <button onclick="AlgebraElemental1.evaluateRationalFunction()">Evaluar</button>
-                            <p id="rationalResult" class="result"></p>
-                        </div>
-                    </div>
-
-
-
-                   <div class="matrix-column">
-                        <h4>Ecuación Cuadrática</h4>
-                        <div class="mb-4">
-                            <p>Ingresa los coeficientes A, B y C de la ecuación cuadrática</p>
-                            <p> Ax² + Bx + C = 0</p>
-                            <div class="coefficient-inputs">
-                                <input type="number" id="coefficientA" placeholder="A">
-                                <input type="number" id="coefficientB" placeholder="B">
-                                <input type="number" id="coefficientC" placeholder="C">
-                            </div>
-                            <div class="precision-control">
-                                <label for="quadraticPrecision">Precisión:</label>
-                                <input type="number" id="quadraticPrecision" value="0" min="0" max="15">
-                            </div>
-                            <button onclick="AlgebraElemental1.solveQuadraticEquation()">Resolver</button>
-                            <p id="discriminantResult" class="result"></p>
-                            <p id="sqrtDiscriminantResult" class="result"></p>
-                            <p id="vertexResult" class="result"></p> </div>
-                            <p id="quadraticRootsResult" class="result"></p> 
-
-                    </div>
-
-
-
-                </div>                        
-
-                <div class="matrix-columns">
-                    <div class="matrix-column">
-                        <h4>Tabla para Funciones</h4>
-                        <p>Ingresa una función, un intervalo y un tamaño de paso para generar una tabla de valores.</p>
-                        <input type="text" id="tableFunctionExpression" placeholder="Ingresa una función (por ejemplo: sin(x))">
-                        <input type="number" id="startInterval" placeholder="Valor inicial del intervalo">
-                        <input type="number" id="endInterval" placeholder="Valor final del intervalo">
-                        <input type="number" id="stepSize" placeholder="Tamaño del paso">
-                        <div class="precision-control">
-                            <label for="tablePrecision">Precisión:</label>
-                            <input type="number" id="tablePrecision" value="0" min="0" max="15">
-                        </div>
-                        <button onclick="AlgebraElemental1.generateTable()">Generar Tabla</button>
-                        <div id="tableResult"></div>
-
-                    </div>
-                </div> 
-
-
-            </div>        
-        </div>
-
-
-
-        <div id="trigo1" class="tool-container" style="display: none;">
-            <div class="function-section">
-                <h2>Bienvenido a la Trigonometría básica </h2>
-
-
-                <p>Calcula funciones trigonométricas.</p>
-                <input type="number" id="angle" placeholder="Ingresa un ángulo en grados">
-                <select id="trigFunction">
-                    <option value="sin">Seno</option>
-                    <option value="cos">Coseno</option>
-                    <option value="tan">Tangente</option>
-                    <option value="csc">Cosecante</option>
-                    <option value="sec">Secante</option>
-                    <option value="cot">Cotangente</option>
-                </select>
-                <div class="precision-control">
-                    <label for="trigPrecision">Precisión:</label>
-                    <input type="number" id="trigPrecision" value="5" min="0" max="15">
-                </div>
-                <button onclick="trigo1.calculateTrig()">Calcular</button>
-                <p id="trigResult" class="result"></p>
-
-            </div>
-        </div>
-
-
-
-        <div id="g_Geogebra" class="tool-container" style="display: none;">
-            <div class="function-section">
-                <h2>Bienvenido al kit de Geogebra Clasico</h2>
-
-                
-                <h2>Aplicaciónes Geogebra </h2>
-                
-                <p> </p>
-                <a href="https://www.geogebra.org/classic?lang=yi" target="_blank" class="button">
-                    Abrir GeoGebra Geometría
-                </a>
-
-                <p> </p>
-
-                <a href="https://www.geogebra.org/cas?lang=es" target="_blank" class="button">
-                    Abrir GeoGebra Simbólico
-                </a>
-
-
-                <p> </p>
-
-                <a href=" https://www.geogebra.org/m/D753wjWN" target="_blank" class="button">
-                    Abrir GeoGebra Estadístico
-                </a>
-
-
-
-
-
-
-
-
-               
-            </div>
-        </div>
-
-        
-        
-        
-
-
-
-        <div id="Determinantes" class="tool-container" style="display: none;">
-            <div class="function-section">
-                <h2>Bienvenido al cálculo de sistemas 2x2 y determinantes 2x2</h2>
-
-                <div class="function-section">
-                    <h3>Multiplicación de Matrices</h3>
-                    <div class="matrix-columns">
-                        <div class="matrix-column">
-                            <h4>Sistema 2 por 2</h4>
-                            <div class="mb-4">
-
-                                <div class="function-section" style="grid-column: 1; border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
-                                    <h3>Coeficientes Ecuación 1</h3>
-                                    <div class="matrix-input">
-                                        <input type="number" id="system2x2A11" placeholder="a11" style="width: 120px; margin: 5px;">
-                                        <input type="number" id="system2x2A12" placeholder="a12" style="width: 120px; margin: 5px;">
-                                        <input type="number" id="system2x2B1" placeholder="b1" style="width: 120px; margin: 5px;">
-                                    </div>
-                                </div>
-
-                                <div class="function-section" style="grid-column: 2; border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
-                                    <h3>Coeficientes Ecuación 2</h3>
-                                    <div class="matrix-input">
-                                        <input type="number" id="system2x2A21" placeholder="a21" style="width: 120px; margin: 5px;">
-                                        <input type="number" id="system2x2A22" placeholder="a22" style="width: 120px; margin: 5px;">
-                                        <input type="number" id="system2x2B2" placeholder="b2" style="width: 120px; margin: 5px;">
-                                    </div>
-                                </div>
-
-                                <div class="function-section" style="grid-column: 3; border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
-                                    <h3>Control de Precisión</h3>
-                                    <div class="precision-control">
-                                        <label for="system2x2Precision">Precisión:</label>
-                                        <input type="number" id="system2x2Precision" value="0" min="0" max="15" style="width: 60px; margin: 5px;">
-                                    </div>
-                                    <button onclick="Determinantes.solveSystem2x2()" style="margin-top: 10px; padding: 8px 15px;">Resolver Sistema</button>
-                                </div>
-
-                                <!-- Segunda fila -->
-                                <div class="result-section" style="grid-column: 1 / span 3; border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
-                                    <h3>Resultado del Sistema</h3>
-                                    <p id="systemResult2x2" class="result"></p>
-                                </div>
-
-                            </div>    
-                        </div>
-
-                        <div class="matrix-column">
-                           <!--  <h4>Determinante matriz de coeficientes</h4> -->
-                            <div class="mb-4">
-                                <h3>Determinante de una Matriz 2x2</h3>
-                                <p>Ingresa los elementos de la matriz 2x2 para calcular el determinante.</p>
-
-
-                                <div class="function-section" style="grid-column: 1; border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
-                                    <h3>Coeficientes Ecuación 1</h3>
-                                    <div class="matrix-input">
-                                        <input type="number" id="matrixA11" placeholder="a11" style="width: 120px; margin: 5px;">
-                                        <input type="number" id="matrixA12" placeholder="a12" style="width: 120px; margin: 5px;">
-                                    </div>
-                                </div>
-
-                                <div class="function-section" style="grid-column: 2; border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
-                                    <h3>Coeficientes Ecuación 2</h3>
-                                    <div class="matrix-input">
-                                        <input type="number" id="matrixA21" placeholder="a21" style="width: 120px; margin: 5px;">
-                                        <input type="number" id="matrixA22" placeholder="a22" style="width: 120px; margin: 5px;">
-                                    </div>
-                                </div>
-
-                                <div class="precision-control">
-                                    <label for="determinant2x2Precision">Precisión:</label>
-                                    <input type="number" id="determinant2x2Precision" value="0" min="0" max="15">
-                                </div>
-                                <button onclick="Determinantes.calculateDeterminant2x2()">Calcular Determinante</button>
-                                <p id="determinantResult2x2" class="result"></p>
-                            </div>  
-                        </div>
-
-
-
-                    </div>
-                </div>
+                    <div class="card-body">
+                        <h3 class="text-xl font-semibold mb-4">Introducción a la Caja de Herramientas</h3>
+                        <p class="mb-4">Hace algún tiempo el profesor Carlos Andrés Escobar Guerra propuso la creación de unas cartillas para los cursos de matemáticas de la facultad de Ciencias y Biotecnología, la elaboración de las cartillas produjo la necesidad de tener las herramientas para desarrollar las actividades de dicha cartilla.</p>
+                        <p class="mb-4">Así es que se llegó a la creación de una caja de herramientas donde se encontraran aplicaciones de aritmética, matemáticas I, II y III, y aplicaciones más avanzadas, la caja de herramientas hace más dinámica la clase, hace que los estudiantes adquieran los saberes esenciales más rápidamente, depende del profesor y de los estudiantes no pasar por alto los detalles que conducen a la solución.</p>
+                        <p class="mb-4">Para solucionar muchos de los ejercicios y problemas no es necesario ser un gran estudiante en matemáticas, eso sí, debe saber interiorizar, entender los conceptos que ayudan a solucionar el problema y en la caja de herramientas encontrará los instrumentos que le ayudaran a solucionar los problemas; depende del alumno escoger la herramienta adecuada.</p>
+                        <p class="mb-4">Otra ventaja de la caja de herramientas es que las aplicaciones se pueden encontrar en un sólo espacio virtual y diseñadas de acuerdo a las necesidades de nuestros estudiantes, para la construcción de las herramientas se utilizó R, LaTeX, Flexdashboard, Bookdown, Shiny, y Geogebra.</p>
+                        <p class="mb-4">Se puede decir que el equipo de trabajo está conformado por el profesor Carlos Andrés Escobar Guerra, Pablo Andrés Guzmán, John Jairo Estrada Álvarez y Juan Albero Arias Quiceno. Gracias a la invaluable ayuda del profesor de estadística y programación Pablo Andrés Guzmán puesto que él inspiró la creación de un grupo de estudio en el cual compartía sus conocimientos de R, de otros programas y actualmente da su opinión acerca de las nuevas aplicaciones. John Jairo Estrada, el cerebro del proyecto, es el programador de todas las aplicaciones.</p>
                         
+                        <div class="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-200 dark:bg-blue-900 dark:border-blue-700">
+                            <div class="flex items-center">
+                                <i class="fas fa-info-circle text-blue-500 mr-3 text-xl"></i>
+                                <p>Selecciona una herramienta del menú lateral para comenzar.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div id="matrices" class="tool-container" style="display: none;">
-            <div class="function-section">
-                <h3>Multiplicación de Matrices</h3>
-                <div class="alert alert-info">
-                    Puedes usar números enteros, decimales o fracciones (por ejemplo: 1/2, 3/4)
-                </div>
-                <div class="matrix-columns">
-                    <div class="matrix-column">
-                        <h4>Matriz A</h4>
-                        <div class="mb-3">
-                            <label class="form-label">Dimensiones:</label>
-                            <div class="d-flex gap-2">
-                                <input type="number" id="rowsA" class="form-control" value="2" min="1" max="5">
-                                <span class="align-self-center">×</span>
-                                <input type="number" id="colsA" class="form-control" value="2" min="1" max="5">
-                            </div>
-                        </div>
-                        <div id="matrixA" class="matrix-input"></div>
+            <!-- Álgebra Elemental Section -->
+            <div id="AlgebraElemental1" class="max-w-6xl mx-auto" style="display: none;">
+                <div class="card">
+                    <div class="card-header flex items-center">
+                        <i class="fas fa-superscript mr-3 text-primary"></i>
+                        <h2>Álgebra Básica (Álgebra Elemental)</h2>
                     </div>
-                    <div class="matrix-column">
-                        <h4>Matriz B</h4>
-                        <div class="mb-3">
-                            <label class="form-label">Dimensiones:</label>
-                            <div class="d-flex gap-2">
-                                <input type="number" id="rowsB" class="form-control" value="2" min="1" max="5">
-                                <span class="align-self-center">×</span>
-                                <input type="number" id="colsB" class="form-control" value="2" min="1" max="5">
-                            </div>
-                        </div>
-                        <div id="matrixB" class="matrix-input"></div>
-                    </div>
-                    <div class="matrix-column">
-                        <h4>Matriz C</h4>
-                        <div class="mb-3">
-                            <label class="form-label">Dimensiones:</label>
-                            <div class="d-flex gap-2">
-                                <input type="number" id="rowsC" class="form-control" value="2" min="1" max="5">
-                                <span class="align-self-center">×</span>
-                                <input type="number" id="colsC" class="form-control" value="2" min="1" max="5">
-                            </div>
-                        </div>
-                        <div id="matrixC" class="matrix-input"></div>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <button class="btn btn-primary me-2" onclick="matrices.generateInputs()">Generar Matrices</button>
-                    <button class="btn btn-success" onclick="matrices.calculate()">Calcular</button>
-                </div>
-                <div id="matrixResult" class="mt-3"></div>
-            </div>
-        </div>
-
-        <div id="gauss-jordan" class="tool-container" style="display: none;">
-            <div class="function-section">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4>Dimensiones del Sistema</h4>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="form-label">Ecuaciones:</label>
-                                        <input type="number" id="gaussRows" class="form-control" value="3" min="2" max="5">
+                    <div class="card-body">
+                        <div class="matrix-grid matrix-grid-3">
+                            <!-- Función Polinómica -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-line mr-2"></i> Función Polinómica
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Ingresa una función algebraica y evalúala para un valor específico de x.</p>
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium">Función:</label>
+                                        <input type="text" id="functionExpression" placeholder="Ejemplo: 2*x^2 + 3*x - 1" pattern="[-+*/^().\dx\s]+" required>
                                     </div>
-                                    <div class="col-6">
-                                        <label class="form-label">Variables:</label>
-                                        <input type="number" id="gaussCols" class="form-control" value="3" min="2" max="5">
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium">Valor de x:</label>
+                                        <input type="number" id="xValue" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium" for="polynomialPrecision">Precisión (0-15):</label>
+                                        <input type="number" id="polynomialPrecision" value="2" min="0" max="15" required>
+                                    </div>
+                                    <button class="btn btn-primary w-full" onclick="AlgebraElemental1.evaluateFunction()">
+                                        <i class="fas fa-calculator mr-2"></i> Evaluar
+                                    </button>
+                                    <div id="polynomialResult" class="result mt-4"></div>
+                                </div>
+                            </div>
+
+                            <!-- Función Racional -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-divide mr-2"></i> Función Racional
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Ingresa el numerador y denominador de la función racional en términos de x.</p>
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium">Numerador:</label>
+                                        <input type="text" id="numeratorExpression" placeholder="Ejemplo: x^2 + 3">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium">Denominador:</label>
+                                        <input type="text" id="denominatorExpression" placeholder="Ejemplo: x - 2">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium">Valor de x:</label>
+                                        <input type="number" id="xValueRational">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium" for="rationalPrecision">Precisión:</label>
+                                        <input type="number" id="rationalPrecision" value="2" min="0" max="15">
+                                    </div>
+                                    <button class="btn btn-primary w-full" onclick="AlgebraElemental1.evaluateRationalFunction()">
+                                        <i class="fas fa-calculator mr-2"></i> Evaluar
+                                    </button>
+                                    <div id="rationalResult" class="result mt-4"></div>
+                                </div>
+                            </div>
+
+                            <!-- Ecuación Cuadrática -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-square-root-alt mr-2"></i> Ecuación Cuadrática
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Ingresa los coeficientes A, B y C de la ecuación cuadrática Ax² + Bx + C = 0</p>
+                                    <div class="grid grid-cols-3 gap-4 mb-4">
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">A:</label>
+                                            <input type="number" id="coefficientA" placeholder="A">
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">B:</label>
+                                            <input type="number" id="coefficientB" placeholder="B">
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">C:</label>
+                                            <input type="number" id="coefficientC" placeholder="C">
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium" for="quadraticPrecision">Precisión:</label>
+                                        <input type="number" id="quadraticPrecision" value="2" min="0" max="15">
+                                    </div>
+                                    <button class="btn btn-primary w-full" onclick="AlgebraElemental1.solveQuadraticEquation()">
+                                        <i class="fas fa-calculator mr-2"></i> Resolver
+                                    </button>
+                                    <div id="discriminantResult" class="result mt-4"></div>
+                                    <div id="sqrtDiscriminantResult" class="result"></div>
+                                    <div id="vertexResult" class="result"></div>
+                                    <div id="quadraticRootsResult" class="result"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabla para Funciones -->
+                        <div class="card mt-8">
+                            <div class="card-header">
+                                <i class="fas fa-table mr-2"></i> Tabla para Funciones
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-4">Ingresa una función, un intervalo y un tamaño de paso para generar una tabla de valores.</p>
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium">Función:</label>
+                                        <input type="text" id="tableFunctionExpression" placeholder="Ejemplo: sin(x)">
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium">Inicio:</label>
+                                        <input type="number" id="startInterval" placeholder="Valor inicial">
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium">Fin:</label>
+                                        <input type="number" id="endInterval" placeholder="Valor final">
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium">Paso:</label>
+                                        <input type="number" id="stepSize" placeholder="Tamaño del paso">
                                     </div>
                                 </div>
-                                <button class="btn btn-primary w-100 mt-3" onclick="gauss.updateMatrix()">Actualizar</button>
-                            </div>
-                        </div>
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <h4>Sistema de Ecuaciones</h4>
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="useFractions" checked>
-                                        <label class="form-check-label">Usar Fracciones</label>
-                                    </div>
+                                <div class="mb-4">
+                                    <label class="block mb-2 text-sm font-medium" for="tablePrecision">Precisión:</label>
+                                    <input type="number" id="tablePrecision" value="2" min="0" max="15">
                                 </div>
-                                <div id="gaussInputs" class="matrix-input"></div>
-                                <button class="btn btn-primary w-100 mt-3" onclick="gauss.generate()">Generar Sistema</button>
+                                <button class="btn btn-primary" onclick="AlgebraElemental1.generateTable()">
+                                    <i class="fas fa-table mr-2"></i> Generar Tabla
+                                </button>
+                                <div id="tableResult" class="mt-4 overflow-x-auto"></div>
                             </div>
                         </div>
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <h4>Operaciones</h4>
-                                <select id="operationType" class="form-select mb-3">
-                                    <option value="multiply">Multiplicar fila por escalar</option>
-                                    <option value="add">Sumar múltiplo de una fila a otra</option>
-                                    <option value="swap">Intercambiar filas</option>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trigonometría Section -->
+            <div id="trigo1" class="max-w-4xl mx-auto" style="display: none;">
+                <div class="card">
+                    <div class="card-header flex items-center">
+                        <i class="fas fa-chart-line mr-3 text-primary"></i>
+                        <h2>Trigonometría Básica</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-6 text-lg">Calcula valores de las funciones trigonométricas para un ángulo dado.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">Ángulo (en grados):</label>
+                                <input type="number" id="angle" placeholder="Ingresa un ángulo en grados" class="w-full">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">Función:</label>
+                                <select id="trigFunction" class="w-full">
+                                    <option value="sin">Seno (sin)</option>
+                                    <option value="cos">Coseno (cos)</option>
+                                    <option value="tan">Tangente (tan)</option>
+                                    <option value="csc">Cosecante (csc)</option>
+                                    <option value="sec">Secante (sec)</option>
+                                    <option value="cot">Cotangente (cot)</option>
                                 </select>
-                                <div id="operationInputs"></div>
-                                <button class="btn btn-success w-100 mt-2" onclick="gauss.applyOperation()">Aplicar</button>
-                                <button class="btn btn-warning w-100 mt-2" onclick="gauss.undo()">Deshacer</button>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium" for="trigPrecision">Precisión:</label>
+                                <input type="number" id="trigPrecision" value="5" min="0" max="15" class="w-full">
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="trigo1.calculateTrig()">
+                            <i class="fas fa-calculator mr-2"></i> Calcular
+                        </button>
+                        
+                        <div id="trigResult" class="result mt-6 p-4 text-lg"></div>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-8 dark:bg-blue-900">
+                            <h3 class="font-semibold mb-2 flex items-center">
+                                <i class="fas fa-info-circle mr-2"></i> Información útil
+                            </h3>
+                            <p>Algunos ángulos notables:</p>
+                            <ul class="list-disc ml-6 mt-2 space-y-1">
+                                <li>Sin(30°) = 0.5</li>
+                                <li>Cos(60°) = 0.5</li>
+                                <li>Tan(45°) = 1</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GeoGebra Section -->
+            <div id="g_Geogebra" class="max-w-4xl mx-auto" style="display: none;">
+                <div class="card">
+                    <div class="card-header flex items-center">
+                        <i class="fas fa-compass mr-3 text-primary"></i>
+                        <h2>GeoGebra Clásico</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-6 text-lg">Acceso a diferentes aplicaciones de GeoGebra para trabajo matemático.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="card">
+                                <div class="card-header text-center">GeoGebra Geometría</div>
+                                <div class="card-body flex flex-col items-center">
+                                    <i class="fas fa-shapes text-5xl mb-4 text-blue-500"></i>
+                                    <p class="mb-4 text-center">Herramienta ideal para construcciones geométricas interactivas.</p>
+                                    <a href="https://www.geogebra.org/classic?lang=yi" target="_blank" class="btn btn-primary w-full">
+                                        <i class="fas fa-external-link-alt mr-2"></i> Abrir
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header text-center">GeoGebra Simbólico</div>
+                                <div class="card-body flex flex-col items-center">
+                                    <i class="fas fa-calculator text-5xl mb-4 text-purple-500"></i>
+                                    <p class="mb-4 text-center">Sistema de álgebra computacional para cálculos simbólicos avanzados.</p>
+                                    <a href="https://www.geogebra.org/cas?lang=es" target="_blank" class="btn btn-primary w-full">
+                                        <i class="fas fa-external-link-alt mr-2"></i> Abrir
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header text-center">GeoGebra Estadístico</div>
+                                <div class="card-body flex flex-col items-center">
+                                    <i class="fas fa-chart-bar text-5xl mb-4 text-green-500"></i>
+                                    <p class="mb-4 text-center">Análisis estadístico y visualización de datos con diagramas interactivos.</p>
+                                    <a href="https://www.geogebra.org/m/D753wjWN" target="_blank" class="btn btn-primary w-full">
+                                        <i class="fas fa-external-link-alt mr-2"></i> Abrir
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-yellow-50 p-4 rounded-lg mt-8 dark:bg-yellow-900">
+                            <h3 class="font-semibold mb-2 flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-2 text-yellow-600"></i> Nota importante
+                            </h3>
+                            <p>Las aplicaciones GeoGebra se abrirán en una nueva pestaña. Asegúrate de permitir ventanas emergentes en tu navegador.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Determinantes Section -->
+            <div id="Determinantes" class="max-w-6xl mx-auto" style="display: none;">
+                <div class="card">
+                    <div class="card-header flex items-center">
+                        <i class="fas fa-calculator mr-3 text-primary"></i>
+                        <h2>Sistemas 2×2 y Determinantes</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="matrix-grid matrix-grid-2">
+                            <!-- Sistema 2×2 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-equals mr-2"></i> Sistema 2×2
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Resolver un sistema de ecuaciones lineales de 2×2.</p>
+                                    
+                                    <div class="border rounded-lg p-4 mb-4 bg-gray-50 dark:bg-gray-800">
+                                        <h3 class="text-lg font-medium mb-3">Ecuación 1</h3>
+                                        <div class="flex space-x-2 items-center">
+                                            <input type="number" id="system2x2A11" placeholder="a₁₁" class="w-20 text-center">
+                                            <span>x₁ +</span>
+                                            <input type="number" id="system2x2A12" placeholder="a₁₂" class="w-20 text-center">
+                                            <span>x₂ =</span>
+                                            <input type="number" id="system2x2B1" placeholder="b₁" class="w-20 text-center">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border rounded-lg p-4 mb-4 bg-gray-50 dark:bg-gray-800">
+                                        <h3 class="text-lg font-medium mb-3">Ecuación 2</h3>
+                                        <div class="flex space-x-2 items-center">
+                                            <input type="number" id="system2x2A21" placeholder="a₂₁" class="w-20 text-center">
+                                            <span>x₁ +</span>
+                                            <input type="number" id="system2x2A22" placeholder="a₂₂" class="w-20 text-center">
+                                            <span>x₂ =</span>
+                                            <input type="number" id="system2x2B2" placeholder="b₂" class="w-20 text-center">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium" for="system2x2Precision">Precisión:</label>
+                                        <input type="number" id="system2x2Precision" value="2" min="0" max="15">
+                                    </div>
+                                    
+                                    <button class="btn btn-primary w-full" onclick="Determinantes.solveSystem2x2()">
+                                        <i class="fas fa-calculator mr-2"></i> Resolver Sistema
+                                    </button>
+                                    
+                                    <div id="systemResult2x2" class="result mt-4"></div>
+                                </div>
+                            </div>
+
+                            <!-- Determinante 2×2 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-border-all mr-2"></i> Determinante 2×2
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Calcular el determinante de una matriz 2×2.</p>
+                                    
+                                    <div class="flex justify-center mb-4">
+                                        <table class="border-collapse">
+                                            <tr>
+                                                <td class="border p-0">
+                                                    <input type="number" id="matrixA11" placeholder="a₁₁" class="w-20 h-14 text-center border-0">
+                                                </td>
+                                                <td class="border p-0">
+                                                    <input type="number" id="matrixA12" placeholder="a₁₂" class="w-20 h-14 text-center border-0">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border p-0">
+                                                    <input type="number" id="matrixA21" placeholder="a₂₁" class="w-20 h-14 text-center border-0">
+                                                </td>
+                                                <td class="border p-0">
+                                                    <input type="number" id="matrixA22" placeholder="a₂₂" class="w-20 h-14 text-center border-0">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium" for="determinant2x2Precision">Precisión:</label>
+                                        <input type="number" id="determinant2x2Precision" value="2" min="0" max="15">
+                                    </div>
+                                    
+                                    <button class="btn btn-primary w-full" onclick="Determinantes.calculateDeterminant2x2()">
+                                        <i class="fas fa-calculator mr-2"></i> Calcular Determinante
+                                    </button>
+                                    
+                                    <div id="determinantResult2x2" class="result mt-4"></div>
+                                    
+                                    <div class="bg-blue-50 p-4 rounded-lg mt-6 dark:bg-blue-900">
+                                        <p class="text-sm">
+                                            <i class="fas fa-info-circle mr-2"></i>
+                                            Fórmula del determinante 2×2: det(A) = a₁₁×a₂₂ - a₁₂×a₂₁
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4>Sistema Actual</h4>
-                                <div id="currentSystem" class="matrix-display"></div>
+                </div>
+            </div>
+
+            <!-- Matrices Section -->
+            <div id="matrices" class="max-w-6xl mx-auto" style="display: none;">
+                <div class="card">
+                    <div class="card-header flex items-center">
+                        <i class="fas fa-th mr-3 text-primary"></i>
+                        <h2>Multiplicación de Matrices</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6 dark:bg-blue-900">
+                            <p><i class="fas fa-info-circle mr-2"></i> Puedes usar números enteros, decimales o fracciones (por ejemplo: 1/2, 3/4)</p>
+                        </div>
+
+                        <div class="matrix-grid matrix-grid-3">
+                            <!-- Matriz A -->
+                            <div class="card">
+                                <div class="card-header text-center">Matriz A</div>
+                                <div class="card-body">
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium">Dimensiones:</label>
+                                        <div class="flex space-x-2 items-center">
+                                            <input type="number" id="rowsA" value="2" min="1" max="5" class="w-16 text-center">
+                                            <span>×</span>
+                                            <input type="number" id="colsA" value="2" min="1" max="5" class="w-16 text-center">
+                                        </div>
+                                    </div>
+                                    <div id="matrixA" class="matrix-input"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Matriz B -->
+                            <div class="card">
+                                <div class="card-header text-center">Matriz B</div>
+                                <div class="card-body">
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium">Dimensiones:</label>
+                                        <div class="flex space-x-2 items-center">
+                                            <input type="number" id="rowsB" value="2" min="1" max="5" class="w-16 text-center">
+                                            <span>×</span>
+                                            <input type="number" id="colsB" value="2" min="1" max="5" class="w-16 text-center">
+                                        </div>
+                                    </div>
+                                    <div id="matrixB" class="matrix-input"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Matriz C -->
+                            <div class="card">
+                                <div class="card-header text-center">Matriz C</div>
+                                <div class="card-body">
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium">Dimensiones:</label>
+                                        <div class="flex space-x-2 items-center">
+                                            <input type="number" id="rowsC" value="2" min="1" max="5" class="w-16 text-center">
+                                            <span>×</span>
+                                            <input type="number" id="colsC" value="2" min="1" max="5" class="w-16 text-center">
+                                        </div>
+                                    </div>
+                                    <div id="matrixC" class="matrix-input"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <h4>Matriz Aumentada</h4>
-                                <div id="augmentedMatrix" class="matrix-display"></div>
-                            </div>
+                        
+                        <div class="flex justify-center space-x-4 mt-6">
+                            <button class="btn btn-outline" onclick="matrices.generateInputs()">
+                                <i class="fas fa-sync mr-2"></i> Generar Matrices
+                            </button>
+                            <button class="btn btn-primary" onclick="matrices.calculate()">
+                                <i class="fas fa-calculator mr-2"></i> Calcular
+                            </button>
                         </div>
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <h4>Historial</h4>
-                                <pre id="operationHistory" class="mt-3">No hay operaciones realizadas</pre>
+                        
+                        <div id="matrixResult" class="mt-6"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gauss-Jordan Section -->
+            <div id="gauss-jordan" class="max-w-6xl mx-auto" style="display: none;">
+                <div class="card">
+                    <div class="card-header flex items-center">
+                        <i class="fas fa-table mr-3 text-primary"></i>
+                        <h2>Método Gauss-Jordan</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="lg:col-span-1">
+                                <div class="card mb-6">
+                                    <div class="card-header">Dimensiones del Sistema</div>
+                                    <div class="card-body">
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block mb-2 text-sm font-medium">Ecuaciones:</label>
+                                                <input type="number" id="gaussRows" value="3" min="2" max="5">
+                                            </div>
+                                            <div>
+                                                <label class="block mb-2 text-sm font-medium">Variables:</label>
+                                                <input type="number" id="gaussCols" value="3" min="2" max="5">
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary w-full mt-4" onclick="gauss.updateMatrix()">
+                                            <i class="fas fa-sync mr-2"></i> Actualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mb-6">
+                                    <div class="card-header">Sistema de Ecuaciones</div>
+                                    <div class="card-body">
+                                        <div class="mb-4">
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="useFractions" checked class="mr-2">
+                                                <span>Usar Fracciones</span>
+                                            </label>
+                                        </div>
+                                        <div id="gaussInputs" class="matrix-input"></div>
+                                        <button class="btn btn-primary w-full mt-4" onclick="gauss.generate()">
+                                            <i class="fas fa-cog mr-2"></i> Generar Sistema
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header">Operaciones</div>
+                                    <div class="card-body">
+                                        <select id="operationType" class="mb-4">
+                                            <option value="multiply">Multiplicar fila por escalar</option>
+                                            <option value="add">Sumar múltiplo de una fila a otra</option>
+                                            <option value="swap">Intercambiar filas</option>
+                                        </select>
+                                        <div id="operationInputs"></div>
+                                        <div class="grid grid-cols-2 gap-4 mt-4">
+                                            <button class="btn btn-primary" onclick="gauss.applyOperation()">
+                                                <i class="fas fa-check mr-2"></i> Aplicar
+                                            </button>
+                                            <button class="btn btn-outline" onclick="gauss.undo()">
+                                                <i class="fas fa-undo mr-2"></i> Deshacer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="lg:col-span-2">
+                                <div class="card mb-6">
+                                    <div class="card-header">Sistema Actual</div>
+                                    <div class="card-body">
+                                        <div id="currentSystem" class="matrix-display p-4 bg-gray-50 rounded-lg dark:bg-gray-800"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mb-6">
+                                    <div class="card-header">Matriz Aumentada</div>
+                                    <div class="card-body">
+                                        <div id="augmentedMatrix" class="matrix-display p-4 bg-gray-50 rounded-lg dark:bg-gray-800"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header">Historial</div>
+                                    <div class="card-body">
+                                        <pre id="operationHistory" class="p-4 bg-gray-50 rounded-lg overflow-x-auto text-sm font-mono dark:bg-gray-800">No hay operaciones realizadas</pre>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -593,13 +834,57 @@
     </div>
 
     <script>
+        // Alternar tema claro/oscuro
+        function toggleTheme() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.theme-toggle i');
+            
+            if (body.classList.contains('dark')) {
+                body.classList.remove('dark');
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        
+        // Aplicar tema almacenado en localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.theme-toggle i');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+        });
+
         const app = {
             currentTool: 'welcome',
             loadTool(tool) {
-                ['welcome','AlgebraElemental1','trigo1','Determinantes', 'matrices', 'gauss-jordan','g_Geogebra'].forEach(t => {
+                const tools = ['welcome','AlgebraElemental1','trigo1','Determinantes', 'matrices', 'gauss-jordan','g_Geogebra'];
+                tools.forEach(t => {
                     document.getElementById(t).style.display = t === tool ? 'block' : 'none';
+                    
+                    // Actualizar clases de botones del sidebar
+                    const button = document.querySelector(`.sidebar-button[onclick="app.loadTool('${t}')"]`);
+                    if (button) {
+                        if (t === tool) {
+                            button.classList.add('active');
+                        } else {
+                            button.classList.remove('active');
+                        }
+                    }
                 });
                 this.currentTool = tool;
+                
+                // Desplazar al inicio cuando se cambia de herramienta
+                window.scrollTo(0, 0);
             }
         };
 
@@ -611,22 +896,24 @@
                 const resultElement = document.getElementById('polynomialResult');
 
                 if (!expression) {
-                    resultElement.textContent = 'Error: Por favor ingresa una expresión válida.';
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: Por favor ingresa una expresión válida.</div>';
                     return;
                 }
                 if (isNaN(xValue)) {
-                    resultElement.textContent = 'Error: Por favor ingresa un valor numérico válido para x.';
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: Por favor ingresa un valor numérico válido para x.</div>';
                     return;
                 }
 
                 try {
-                    // Usar la variable math global proporcionada por el script incluido
                     const parsedExpression = math.parse(expression);
                     const compiledExpression = parsedExpression.compile();
                     const result = compiledExpression.evaluate({ x: xValue });
-                    resultElement.textContent = `Resultado: ${result.toFixed(precision)}`;
+                    resultElement.innerHTML = `
+                        <div class="font-medium mb-2">Para x = ${xValue}:</div>
+                        <div class="text-lg">f(x) = ${result.toFixed(precision)}</div>
+                    `;
                 } catch (error) {
-                    resultElement.textContent = 'Error: La expresión no se pudo evaluar. Por favor verifica la sintaxis.';
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: La expresión no se pudo evaluar. Por favor verifica la sintaxis.</div>';
                 }
             },
 
@@ -638,11 +925,11 @@
                 const resultElement = document.getElementById('rationalResult');
 
                 if (!numerator || !denominator) {
-                    resultElement.textContent = 'Error: Por favor ingresa expresiones válidas para el numerador y el denominador.';
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: Por favor ingresa expresiones válidas para el numerador y el denominador.</div>';
                     return;
                 }
                 if (isNaN(xValue)) {
-                    resultElement.textContent = 'Error: Por favor ingresa un valor numérico válido para x.';
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: Por favor ingresa un valor numérico válido para x.</div>';
                     return;
                 }
 
@@ -655,14 +942,17 @@
                     const denominatorValue = compiledDenominator.evaluate({ x: xValue });
 
                     if (denominatorValue === 0) {
-                        resultElement.textContent = 'Error: División por cero.';
+                        resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: División por cero.</div>';
                         return;
                     }
 
                     const result = numeratorValue / denominatorValue;
-                    resultElement.textContent = `Resultado: ${result.toFixed(precision)}`;
+                    resultElement.innerHTML = `
+                        <div class="font-medium mb-2">Para x = ${xValue}:</div>
+                        <div class="text-lg">f(x) = ${result.toFixed(precision)}</div>
+                    `;
                 } catch (error) {
-                    resultElement.textContent = 'Error: Las expresiones no se pudieron evaluar. Por favor verifica la sintaxis.';
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: Las expresiones no se pudieron evaluar. Por favor verifica la sintaxis.</div>';
                 }
             },
 
@@ -675,32 +965,45 @@
                 const resultElement = document.getElementById('tableResult');
 
                 if (!expression) {
-                    resultElement.innerHTML = 'Error: Por favor ingresa una expresión válida.';
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: Por favor ingresa una expresión válida.</div>';
                     return;
                 }
                 if (isNaN(startInterval) || isNaN(endInterval) || isNaN(stepSize) || stepSize <= 0) {
-                    resultElement.innerHTML = 'Error: Por favor ingresa valores numéricos válidos para el intervalo y el tamaño del paso.';
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: Por favor ingresa valores numéricos válidos para el intervalo y el tamaño del paso.</div>';
                     return;
                 }
 
                 try {
                     const parsedExpression = math.parse(expression);
                     const compiledExpression = parsedExpression.compile();
-                    let tableContent = `<table><thead><tr><th>x</th><th>f(x)</th></tr></thead><tbody>`;
+                    let tableContent = `
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 dark:bg-gray-700">
+                                    <th class="border px-4 py-2">x</th>
+                                    <th class="border px-4 py-2">f(x)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
 
                     for (let x = startInterval; x <= endInterval; x += stepSize) {
-                        const y = compiledExpression.evaluate({ x: x });
-                        tableContent += `<tr><td>${x.toFixed(precision)}</td>   <td>${y.toFixed(precision)}</td></tr>`;
+                        const xRounded = parseFloat(x.toFixed(precision));
+                        const y = compiledExpression.evaluate({ x: xRounded });
+                        const yRounded = parseFloat(y.toFixed(precision));
+                        
+                        tableContent += `
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                <td class="border px-4 py-2 text-center">${xRounded}</td>
+                                <td class="border px-4 py-2 text-center">${yRounded}</td>
+                            </tr>
+                        `;
                     }
 
-                    tableContent += 
-                    `</tbody> 
-                    <td style="width: 50px"></td>
-                    <td style="width: 50px"></td>
-                     </table>`;
+                    tableContent += `</tbody></table>`;
                     resultElement.innerHTML = tableContent;
                 } catch (error) {
-                    resultElement.innerHTML = 'Error: La expresión no se pudo evaluar. Por favor verifica la sintaxis.';
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: La expresión no se pudo evaluar. Por favor verifica la sintaxis.</div>';
                 }
             },
 
@@ -715,43 +1018,85 @@
                 const quadraticRootsResult = document.getElementById('quadraticRootsResult');
 
                 if (isNaN(a) || isNaN(b) || isNaN(c)) {
-                    discriminantResult.textContent = 'Error: Por favor ingresa valores numéricos válidos para A, B y C.';
+                    discriminantResult.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: Por favor ingresa valores numéricos válidos para A, B y C.</div>';
+                    sqrtDiscriminantResult.textContent = '';
+                    vertexResult.textContent = '';
+                    quadraticRootsResult.textContent = '';
+                    return;
+                }
+
+                if (a === 0) {
+                    discriminantResult.innerHTML = '<div class="text-yellow-500"><i class="fas fa-exclamation-triangle mr-2"></i> Advertencia: El coeficiente A no puede ser cero para una ecuación cuadrática.</div>';
+                    sqrtDiscriminantResult.textContent = '';
+                    vertexResult.textContent = '';
+                    
+                    // Resolver ecuación lineal si A = 0
+                    if (b !== 0) {
+                        const root = -c / b;
+                        quadraticRootsResult.innerHTML = `
+                            <div class="font-medium">Ecuación lineal:</div>
+                            <div>x = ${root.toFixed(precision)}</div>
+                        `;
+                    } else {
+                        quadraticRootsResult.innerHTML = '<div class="text-yellow-500"><i class="fas fa-exclamation-triangle mr-2"></i> Ecuación indeterminada: Ambos coeficientes A y B son cero.</div>';
+                    }
                     return;
                 }
 
                 const discriminant = b * b - 4 * a * c;
-                discriminantResult.textContent = `Discriminante (D): ${discriminant.toFixed(precision)}`;
+                discriminantResult.innerHTML = `
+                    <div class="font-medium">Discriminante (D):</div>
+                    <div>D = ${discriminant.toFixed(precision)}</div>
+                `;
 
                 if (discriminant > 0) {
                     const sqrtD = Math.sqrt(discriminant);
-                    sqrtDiscriminantResult.textContent = `Raíz del discriminante: ${sqrtD.toFixed(precision)}`;
+                    sqrtDiscriminantResult.innerHTML = `
+                        <div class="font-medium">Raíz del discriminante:</div>
+                        <div>√D = ${sqrtD.toFixed(precision)}</div>
+                    `;
                     const root1 = (-b + sqrtD) / (2 * a);
                     const root2 = (-b - sqrtD) / (2 * a);
-                    quadraticRootsResult.textContent = `Raíces reales: x1 = ${root1.toFixed(precision)}, x2 = ${root2.toFixed(precision)}`;
+                    quadraticRootsResult.innerHTML = `
+                        <div class="font-medium">Raíces reales:</div>
+                        <div>x₁ = ${root1.toFixed(precision)}</div>
+                        <div>x₂ = ${root2.toFixed(precision)}</div>
+                    `;
                 } else if (discriminant === 0) {
                     const root = -b / (2 * a);
-                    sqrtDiscriminantResult.textContent = `Raíz del discriminante: 0`;
-                    quadraticRootsResult.textContent = `Raíz única: x = ${root.toFixed(precision)}`;
+                    sqrtDiscriminantResult.innerHTML = `
+                        <div class="font-medium">Raíz del discriminante:</div>
+                        <div>√D = 0</div>
+                    `;
+                    quadraticRootsResult.innerHTML = `
+                        <div class="font-medium">Raíz única:</div>
+                        <div>x = ${root.toFixed(precision)}</div>
+                    `;
                 } else {
                     const sqrtD = Math.sqrt(-discriminant);
-                    sqrtDiscriminantResult.textContent = `Raíz del discriminante: i * ${sqrtD.toFixed(precision)}`;
+                    sqrtDiscriminantResult.innerHTML = `
+                        <div class="font-medium">Raíz del discriminante:</div>
+                        <div>√D = i · ${sqrtD.toFixed(precision)}</div>
+                    `;
                     const realPart = -b / (2 * a);
                     const imaginaryPart = sqrtD / (2 * a);
-                    quadraticRootsResult.textContent = `Raíces complejas: x1 = ${realPart.toFixed(precision)} + i * ${imaginaryPart.toFixed(precision)}, x2 = ${realPart.toFixed(precision)} - i * ${imaginaryPart.toFixed(precision)}`;
+                    quadraticRootsResult.innerHTML = `
+                        <div class="font-medium">Raíces complejas:</div>
+                        <div>x₁ = ${realPart.toFixed(precision)} + i · ${imaginaryPart.toFixed(precision)}</div>
+                        <div>x₂ = ${realPart.toFixed(precision)} - i · ${imaginaryPart.toFixed(precision)}</div>
+                    `;
                 }
 
                 const vertexX = -b / (2 * a);
                 const vertexY = (4 * a * c - b * b) / (4 * a);
-                vertexResult.textContent = `Vértice: V(${vertexX.toFixed(precision)}, ${vertexY.toFixed(precision)})`;
+                vertexResult.innerHTML = `
+                    <div class="font-medium">Vértice:</div>
+                    <div>V(${vertexX.toFixed(precision)}, ${vertexY.toFixed(precision)})</div>
+                `;
             },
-
         };
 
-
-
-
-        const trigo1 ={
-
+        const trigo1 = {
             calculateTrig() {
                 const angle = parseFloat(document.getElementById('angle').value);
                 const functionType = document.getElementById('trigFunction').value;
@@ -759,307 +1104,134 @@
                 const resultElement = document.getElementById('trigResult');
 
                 if (isNaN(angle)) {
-                    resultElement.textContent = 'Por favor, ingresa un ángulo válido.';
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Por favor, ingresa un ángulo válido.</div>';
                     return;
                 }
 
                 let result;
                 const radians = angle * (Math.PI / 180);
-                switch (functionType) {
-                    case 'sin':
-                        result = Math.sin(radians);
-                        break;
-                    case 'cos':
-                        result = Math.cos(radians);
-                        break;
-                    case 'tan':
-                        result = Math.tan(radians);
-                        break;
-                    case 'csc':
-                        result = 1 / Math.sin(radians);
-                        break;
-                    case 'sec':
-                        result = 1 / Math.cos(radians);
-                        break;
-                    case 'cot':
-                        result = 1 / Math.tan(radians);
-                        break;
-                    default:
-                        resultElement.textContent = 'Función no válida.';
-                        return;
+                let functionName = '';
+                
+                try {
+                    switch (functionType) {
+                        case 'sin':
+                            result = Math.sin(radians);
+                            functionName = 'Seno';
+                            break;
+                        case 'cos':
+                            result = Math.cos(radians);
+                            functionName = 'Coseno';
+                            break;
+                        case 'tan':
+                            result = Math.tan(radians);
+                            functionName = 'Tangente';
+                            break;
+                        case 'csc':
+                            result = 1 / Math.sin(radians);
+                            functionName = 'Cosecante';
+                            break;
+                        case 'sec':
+                            result = 1 / Math.cos(radians);
+                            functionName = 'Secante';
+                            break;
+                        case 'cot':
+                            result = 1 / Math.tan(radians);
+                            functionName = 'Cotangente';
+                            break;
+                        default:
+                            resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Función no válida.</div>';
+                            return;
+                    }
+                    
+                    if (!isFinite(result)) {
+                        resultElement.innerHTML = `<div class="text-yellow-500"><i class="fas fa-exclamation-triangle mr-2"></i> ${functionName}(${angle}°) = Indefinido</div>`;
+                    } else {
+                        resultElement.innerHTML = `<div class="text-xl">${functionName}(${angle}°) = ${result.toFixed(precision)}</div>`;
+                    }
+                } catch (error) {
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error en el cálculo.</div>';
                 }
-
-                resultElement.textContent = `Resultado: ${result.toFixed(precision)}`;
             },
         };
 
-
-
-        const g_Geogebra ={
-
-            initGeogebra() {
-                var params = {
-                    "appName": "OOR7QQOe",
-                    "width": 800,
-                    "height": 600,
-                    "showToolBar": true,
-                    "showAlgebraInput": true,
-                    "showMenuBar": true,
-                    "showResetIcon": true,
-                    "enableLabelDrags": false,
-                    "enableShiftDragZoom": true,
-                    "enableRightClick": false,
-                    "showToolBarHelp": false,
-                    "errorDialogsActive": true,
-                    "useBrowserForJS": true,
-                    "allowStyleBar": false,
-                    "preventFocus": false,
-                    "showZoomButtons": true,
-                    "capturingThreshold": 3,
-                    "showFullscreenButton": true,
-                    "scale": 1,
-                    "disableAutoScale": false,
-                    "language": "es",
-                    "borderColor": "#ccc",
-                    "buttonShadows": false,
-                    "buttonRounding": 0.7
-                };
-
-                var applet = new GGBApplet(params, true);
-                applet.inject('ggb-element');
-            
-                if (typeof GGBApplet === 'undefined') {
-                    const script = document.createElement('script');
-                    script.src = 'https://www.geogebra.org/apps/deployggb.js';
-                    script.async = true;
-                    script.onload = function() {
-                        setTimeout(initGeogebra, 100); // Pequeño retraso para asegurar que todo esté cargado
-                    };
-                    script.onerror = function() {
-                        document.getElementById('ggb-element').innerHTML = 
-                            '<p>Error al cargar Geogebra. Por favor, revise su conexión a internet y recargue la página.</p>';
-                    };
-                    document.head.appendChild(script);
-                } else {
-                    setTimeout(initGeogebra, 100);
-                }
-            
-            },
+        const g_Geogebra = {
+            // Placeholder for Geogebra functionalities
         };
-
-
-
 
         const Determinantes = {
+            solveSystem2x2() {
+                const a11 = parseFloat(document.getElementById('system2x2A11').value);
+                const a12 = parseFloat(document.getElementById('system2x2A12').value);
+                const b1 = parseFloat(document.getElementById('system2x2B1').value);
+                const a21 = parseFloat(document.getElementById('system2x2A21').value);
+                const a22 = parseFloat(document.getElementById('system2x2A22').value);
+                const b2 = parseFloat(document.getElementById('system2x2B2').value);
+                const precision = parseInt(document.getElementById('system2x2Precision').value);
+                const resultElement = document.getElementById('systemResult2x2');
 
-                    solveSystem2x2() {
-                        const a11 = parseFloat(document.getElementById('system2x2A11').value);
-                        const a12 = parseFloat(document.getElementById('system2x2A12').value);
-                        const b1 = parseFloat(document.getElementById('system2x2B1').value);
-                        const a21 = parseFloat(document.getElementById('system2x2A21').value);
-                        const a22 = parseFloat(document.getElementById('system2x2A22').value);
-                        const b2 = parseFloat(document.getElementById('system2x2B2').value);
-                        const precision = parseInt(document.getElementById('system2x2Precision').value);
-                        const resultElement = document.getElementById('systemResult2x2');
+                if (isNaN(a11) || isNaN(a12) || isNaN(b1) || isNaN(a21) || isNaN(a22) || isNaN(b2)) {
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: Por favor ingresa todos los valores numéricos del sistema.</div>';
+                    return;
+                }
 
-                        if (isNaN(a11) || isNaN(a12) || isNaN(b1) || isNaN(a21) || isNaN(a22) || isNaN(b2)) {
-                            resultElement.textContent = 'Error: Por favor ingresa todos los valores numéricos del sistema.';
-                            return;
-                        }
+                const matrixA = [
+                    [a11, a12],
+                    [a21, a22]
+                ];
+                const matrixB = [b1, b2];
+                const det = (a11 * a22) - (a12 * a21);
 
-                        const matrixA = [
-                            [a11, a12],
-                            [a21, a22]
-                        ];
-                        const matrixB = [b1, b2];
+                try {
+                    if (Math.abs(det) < 1e-10) {
+                        resultElement.innerHTML = '<div class="text-yellow-500"><i class="fas fa-exclamation-triangle mr-2"></i> El sistema no tiene una solución única (el determinante es cero).</div>';
+                    } else {
+                        const solution = math.lusolve(matrixA, matrixB);
+                        resultElement.innerHTML = `
+                            <div class="font-medium">Solución del sistema:</div>
+                            <div class="grid grid-cols-2 gap-4 mt-2">
+                                <div class="bg-gray-50 p-3 rounded-lg dark:bg-gray-800">
+                                    <span class="font-medium">x₁ = </span>
+                                    <span>${solution[0][0].toFixed(precision)}</span>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-lg dark:bg-gray-800">
+                                    <span class="font-medium">x₂ = </span>
+                                    <span>${solution[1][0].toFixed(precision)}</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: No se pudo resolver el sistema.</div>';
+                }
+            },
 
-                        try {
-                            const solution = math.lusolve(matrixA, matrixB);
-                            resultElement.textContent = `Solución:             x1 = ${solution[0][0].toFixed(precision)},   x2 = ${solution[1][0].toFixed(precision)}`;
-                        } catch (error) {
-                            resultElement.textContent = 'Error: No se pudo resolver el sistema.';
-                        }
-                    },
+            calculateDeterminant2x2() {
+                const a11 = parseFloat(document.getElementById('matrixA11').value);
+                const a12 = parseFloat(document.getElementById('matrixA12').value);
+                const a21 = parseFloat(document.getElementById('matrixA21').value);
+                const a22 = parseFloat(document.getElementById('matrixA22').value);
+                const precision = parseInt(document.getElementById('determinant2x2Precision').value);
+                const resultElement = document.getElementById('determinantResult2x2');
 
+                if (isNaN(a11) || isNaN(a12) || isNaN(a21) || isNaN(a22)) {
+                    resultElement.innerHTML = '<div class="text-red-500"><i class="fas fa-exclamation-circle mr-2"></i> Error: Por favor ingresa todos los valores numéricos de la matriz.</div>';
+                    return;
+                }
 
-
-                    solveSystem3x3() {
-                        const a11 = parseFloat(document.getElementById('system3x3A11').value);
-                        const a12 = parseFloat(document.getElementById('system3x3A12').value);
-                        const a13 = parseFloat(document.getElementById('system3x3A13').value);
-                        const b1 = parseFloat(document.getElementById('system3x3B1').value);
-                        const a21 = parseFloat(document.getElementById('system3x3A21').value);
-                        const a22 = parseFloat(document.getElementById('system3x3A22').value);
-                        const a23 = parseFloat(document.getElementById('system3x3A23').value);
-                        const b2 = parseFloat(document.getElementById('system3x3B2').value);
-                        const a31 = parseFloat(document.getElementById('system3x3A31').value);
-                        const a32 = parseFloat(document.getElementById('system3x3A32').value);
-                        const a33 = parseFloat(document.getElementById('system3x3A33').value);
-                        const b3 = parseFloat(document.getElementById('system3x3B3').value);
-                        const precision = parseInt(document.getElementById('system3x3Precision').value);
-                        const resultElement = document.getElementById('systemResult3x3');
-        
-                        if (isNaN(a11) || isNaN(a12) || isNaN(a13) || isNaN(b1) ||
-                            isNaN(a21) || isNaN(a22) || isNaN(a23) || isNaN(b2) ||
-                            isNaN(a31) || isNaN(a32) || isNaN(a33) || isNaN(b3)) {
-                            resultElement.textContent = 'Error: Por favor ingresa todos los valores numéricos del sistema.';
-                            return;
-                        }
-        
-                        const matrixA = [
-                            [a11, a12, a13],
-                            [a21, a22, a23],
-                            [a31, a32, a33]
-                        ];
-                        const matrixB = [b1, b2, b3];
-        
-                        try {
-                            const solution = math.lusolve(matrixA, matrixB);
-                            resultElement.textContent = `Solución: x1 = ${solution[0][0].toFixed(precision)}, x2 = ${solution[1][0].toFixed(precision)}, x3 = ${solution[2][0].toFixed(precision)}`;
-                        } catch (error) {
-                            resultElement.textContent = 'Error: No se pudo resolver el sistema.';
-                        }
-                    },
-        
-                    solveSystem4x4() {
-                        const a11 = parseFloat(document.getElementById('system4x4A11').value);
-                        const a12 = parseFloat(document.getElementById('system4x4A12').value);
-                        const a13 = parseFloat(document.getElementById('system4x4A13').value);
-                        const a14 = parseFloat(document.getElementById('system4x4A14').value);
-                        const b1 = parseFloat(document.getElementById('system4x4B1').value);
-                        const a21 = parseFloat(document.getElementById('system4x4A21').value);
-                        const a22 = parseFloat(document.getElementById('system4x4A22').value);
-                        const a23 = parseFloat(document.getElementById('system4x4A23').value);
-                        const a24 = parseFloat(document.getElementById('system4x4A24').value);
-                        const b2 = parseFloat(document.getElementById('system4x4B2').value);
-                        const a31 = parseFloat(document.getElementById('system4x4A31').value);
-                        const a32 = parseFloat(document.getElementById('system4x4A32').value);
-                        const a33 = parseFloat(document.getElementById('system4x4A33').value);
-                        const a34 = parseFloat(document.getElementById('system4x4A34').value);
-                        const b3 = parseFloat(document.getElementById('system4x4B3').value);
-                        const a41 = parseFloat(document.getElementById('system4x4A41').value);
-                        const a42 = parseFloat(document.getElementById('system4x4A42').value);
-                        const a43 = parseFloat(document.getElementById('system4x4A43').value);
-                        const a44 = parseFloat(document.getElementById('system4x4A44').value);
-                        const b4 = parseFloat(document.getElementById('system4x4B4').value);
-                        const precision = parseInt(document.getElementById('system4x4Precision').value);
-                        const resultElement = document.getElementById('systemResult4x4');
-        
-                        if (isNaN(a11) || isNaN(a12) || isNaN(a13) || isNaN(a14) ||
-                            isNaN(b1) || isNaN(a21) || isNaN(a22) || isNaN(a23) ||
-                            isNaN(a24) || isNaN(b2) || isNaN(a31) || isNaN(a32) ||
-                            isNaN(a33) || isNaN(a34) || isNaN(b3) || isNaN(a41) ||
-                            isNaN(a42) || isNaN(a43) || isNaN(a44) || isNaN(b4)) {
-                            resultElement.textContent = 'Error: Por favor ingresa todos los valores numéricos del sistema.';
-                            return;
-                        }
-        
-                        const matrixA = [
-                            [a11, a12, a13, a14],
-                            [a21, a22, a23, a24],
-                            [a31, a32, a33, a34],
-                            [a41, a42, a43, a44]
-                        ];
-                        const matrixB = [b1, b2, b3, b4];
-        
-                        try {
-                            const solution = math.lusolve(matrixA, matrixB);
-                            resultElement.textContent = `Solución: x1 = ${solution[0][0].toFixed(precision)}, x2 = ${solution[1][0].toFixed(precision)}, x3 = ${solution[2][0].toFixed(precision)}, x4 = ${solution[3][0].toFixed(precision)}`;
-                        } catch (error) {
-                            resultElement.textContent = 'Error: No se pudo resolver el sistema.';
-                        }
-                    },
-        
-                    calculateDeterminant2x2() {
-                        const a11 = parseFloat(document.getElementById('matrixA11').value);
-                        const a12 = parseFloat(document.getElementById('matrixA12').value);
-                        const a21 = parseFloat(document.getElementById('matrixA21').value);
-                        const a22 = parseFloat(document.getElementById('matrixA22').value);
-                        const precision = parseInt(document.getElementById('determinant2x2Precision').value);
-                        const resultElement = document.getElementById('determinantResult2x2');
-        
-                        if (isNaN(a11) || isNaN(a12) || isNaN(a21) || isNaN(a22)) {
-                            resultElement.textContent = 'Error: Por favor ingresa todos los valores numéricos de la matriz.';
-                            return;
-                        }
-        
-                        const determinant = (a11 * a22) - (a12 * a21);
-                        resultElement.textContent = `Determinante: ${determinant.toFixed(precision)}`;
-                    },
-        
-                    calculateDeterminant3x3() {
-                        const a11 = parseFloat(document.getElementById('matrix3x3A11').value);
-                        const a12 = parseFloat(document.getElementById('matrix3x3A12').value);
-                        const a13 = parseFloat(document.getElementById('matrix3x3A13').value);
-                        const a21 = parseFloat(document.getElementById('matrix3x3A21').value);
-                        const a22 = parseFloat(document.getElementById('matrix3x3A22').value);
-                        const a23 = parseFloat(document.getElementById('matrix3x3A23').value);
-                        const a31 = parseFloat(document.getElementById('matrix3x3A31').value);
-                        const a32 = parseFloat(document.getElementById('matrix3x3A32').value);
-                        const a33 = parseFloat(document.getElementById('matrix3x3A33').value);
-                        const precision = parseInt(document.getElementById('determinant3x3Precision').value);
-                        const resultElement = document.getElementById('determinantResult3x3');
-        
-                        if (isNaN(a11) || isNaN(a12) || isNaN(a13) || isNaN(a21) || isNaN(a22) || isNaN(a23) || isNaN(a31) || isNaN(a32) || isNaN(a33)) {
-                            resultElement.textContent = 'Error: Por favor ingresa todos los valores numéricos de la matriz.';
-                            return;
-                        }
-        
-                        const determinant = a11 * (a22 * a33 - a23 * a32) - a12 * (a21 * a33 - a23 * a31) + a13 * (a21 * a32 - a22 * a31);
-                        resultElement.textContent = `Determinante: ${determinant.toFixed(precision)}`;
-                    },
-        
-                    calculateDeterminant4x4() {
-                        const a11 = parseFloat(document.getElementById('matrix4x4A11').value);
-                        const a12 = parseFloat(document.getElementById('matrix4x4A12').value);
-                        const a13 = parseFloat(document.getElementById('matrix4x4A13').value);
-                        const a14 = parseFloat(document.getElementById('matrix4x4A14').value);
-                        const a21 = parseFloat(document.getElementById('matrix4x4A21').value);
-                        const a22 = parseFloat(document.getElementById('matrix4x4A22').value);
-                        const a23 = parseFloat(document.getElementById('matrix4x4A23').value);
-                        const a24 = parseFloat(document.getElementById('matrix4x4A24').value);
-                        const a31 = parseFloat(document.getElementById('matrix4x4A31').value);
-                        const a32 = parseFloat(document.getElementById('matrix4x4A32').value);
-                        const a33 = parseFloat(document.getElementById('matrix4x4A33').value);
-                        const a34 = parseFloat(document.getElementById('matrix4x4A34').value);
-                        const a41 = parseFloat(document.getElementById('matrix4x4A41').value);
-                        const a42 = parseFloat(document.getElementById('matrix4x4A42').value);
-                        const a43 = parseFloat(document.getElementById('matrix4x4A43').value);
-                        const a44 = parseFloat(document.getElementById('matrix4x4A44').value);
-                        const precision = parseInt(document.getElementById('determinant4x4Precision').value);
-                        const resultElement = document.getElementById('determinantResult4x4');
-        
-                        if (isNaN(a11) || isNaN(a12) || isNaN(a13) || isNaN(a14) ||
-                            isNaN(a21) || isNaN(a22) || isNaN(a23) || isNaN(a24) ||
-                            isNaN(a31) || isNaN(a32) || isNaN(a33) || isNaN(a34) ||
-                            isNaN(a41) || isNaN(a42) || isNaN(a43) || isNaN(a44)) {
-                            resultElement.textContent = 'Error: Por favor ingresa todos los valores numéricos de la matriz.';
-                            return;
-                        }
-        
-                        // Calculating the determinant of a 4x4 matrix is more complex, using math.js
-                        const matrix = [
-                            [a11, a12, a13, a14],
-                            [a21, a22, a23, a24],
-                            [a31, a32, a33, a34],
-                            [a41, a42, a43, a44]
-                        ];
-        
-                        try {
-                            const determinant = math.det(matrix);
-                            resultElement.textContent = `Determinante: ${determinant.toFixed(precision)}`;
-                        } catch (error) {
-                            resultElement.textContent = 'Error: No se pudo calcular el determinante.';
-                        }
-                    },
-
+                const determinant = (a11 * a22) - (a12 * a21);
+                
+                const calcHtml = `
+                    <div class="font-medium mb-2">Cálculo:</div>
+                    <div class="mb-2">(${a11} × ${a22}) - (${a12} × ${a21})</div>
+                    <div class="mb-2">${a11 * a22} - ${a12 * a21}</div>
+                `;
+                
+                resultElement.innerHTML = `
+                    ${calcHtml}
+                    <div class="text-xl font-medium mt-3">Determinante = ${determinant.toFixed(precision)}</div>
+                `;
+            },
         };
-
-
-
-
-
-
 
         function gcd(a, b) {
             a = Math.abs(a);
@@ -1117,7 +1289,7 @@
                     container.innerHTML = '';
                     
                     const table = document.createElement('table');
-                    table.className = 'matrix-table';
+                    table.className = 'matrix-table mx-auto';
                     
                     for (let i = 0; i < rows; i++) {
                         const tr = table.insertRow();
@@ -1125,7 +1297,7 @@
                             const td = tr.insertCell();
                             const input = document.createElement('input');
                             input.type = 'text';
-                            input.className = 'form-control form-control-sm';
+                            input.className = 'w-20 h-10 text-center';
                             input.id = `${matrix}_${i}_${j}`;
                             input.value = '0';
                             td.appendChild(input);
@@ -1144,7 +1316,7 @@
                 const colsC = parseInt(document.getElementById('colsC').value);
 
                 if (colsA !== rowsB || colsB !== rowsC) {
-                    alert('Las dimensiones no son compatibles para multiplicación');
+                    alert('Las dimensiones no son compatibles para multiplicación de matrices');
                     return false;
                 }
                 return true;
@@ -1197,10 +1369,19 @@
                 const result = this.multiply(AB, C);
 
                 document.getElementById('matrixResult').innerHTML = `
-                    <h4>Producto intermedio (AB):</h4>
-                    <div class="matrix-display">${this.formatMatrix(AB)}</div>
-                    <h4>Resultado final (ABC):</h4>
-                    <div class="matrix-display">${this.formatMatrix(result)}</div>
+                    <div class="card mt-6">
+                        <div class="card-header">Resultados</div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <h4 class="font-medium mb-2">Producto intermedio (AB):</h4>
+                                <div class="matrix-display p-4 bg-gray-50 rounded-lg dark:bg-gray-800">${this.formatMatrix(AB)}</div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-2">Resultado final (ABC):</h4>
+                                <div class="matrix-display p-4 bg-gray-50 rounded-lg dark:bg-gray-800">${this.formatMatrix(result)}</div>
+                            </div>
+                        </div>
+                    </div>
                 `;
                 
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, "matrixResult"]);
@@ -1226,7 +1407,7 @@
                 container.innerHTML = '';
                 
                 const table = document.createElement('table');
-                table.className = 'matrix-table';
+                table.className = 'mx-auto mb-4';
                 
                 for (let i = 0; i < this.rows; i++) {
                     const row = table.insertRow();
@@ -1234,9 +1415,13 @@
                         const cell = row.insertCell();
                         const input = document.createElement('input');
                         input.type = 'text';
-                        input.className = 'form-control form-control-sm';
+                        input.className = 'w-16 h-10 text-center m-1';
                         input.id = `gauss_${i}_${j}`;
                         input.value = '0';
+                        if (j === this.cols) {
+                            // Agregar divisor visual para la columna aumentada
+                            cell.style.borderLeft = '2px solid #aaa';
+                        }
                         cell.appendChild(input);
                     }
                 }
@@ -1294,42 +1479,42 @@
                 let html = '';
                 if (type === 'multiply') {
                     html = `
-                        <label class="form-label">Fila a multiplicar:</label>
-                        <select class="form-select mb-2" id="multRow">
+                        <label class="block mb-2 text-sm font-medium">Fila a multiplicar:</label>
+                        <select class="mb-3" id="multRow">
                             ${Array.from({length: this.rows}, (_, i) => 
                                 `<option value="${i}">Fila ${i + 1}</option>`
                             ).join('')}
                         </select>
-                        <label class="form-label">Escalar (fracción o decimal):</label>
-                        <input type="text" class="form-control" id="scalar" value="1">
+                        <label class="block mb-2 text-sm font-medium">Escalar:</label>
+                        <input type="text" id="scalar" value="1" placeholder="Número o fracción">
                     `;
                 } else if (type === 'add') {
                     html = `
-                        <label class="form-label">Fila origen:</label>
-                        <select class="form-select mb-2" id="sourceRow">
+                        <label class="block mb-2 text-sm font-medium">Fila origen:</label>
+                        <select class="mb-3" id="sourceRow">
                             ${Array.from({length: this.rows}, (_, i) => 
                                 `<option value="${i}">Fila ${i + 1}</option>`
                             ).join('')}
                         </select>
-                        <label class="form-label">Fila destino:</label>
-                        <select class="form-select mb-2" id="targetRow">
+                        <label class="block mb-2 text-sm font-medium">Fila destino:</label>
+                        <select class="mb-3" id="targetRow">
                             ${Array.from({length: this.rows}, (_, i) => 
                                 `<option value="${i}">Fila ${i + 1}</option>`
                             ).join('')}
                         </select>
-                        <label class="form-label">Multiplicador (fracción o decimal):</label>
-                        <input type="text" class="form-control" id="multiplier" value="1">
+                        <label class="block mb-2 text-sm font-medium">Multiplicador:</label>
+                        <input type="text" id="multiplier" value="1" placeholder="Número o fracción">
                     `;
                 } else if (type === 'swap') {
                     html = `
-                        <label class="form-label">Primera fila:</label>
-                        <select class="form-select mb-2" id="row1">
+                        <label class="block mb-2 text-sm font-medium">Primera fila:</label>
+                        <select class="mb-3" id="row1">
                             ${Array.from({length: this.rows}, (_, i) => 
                                 `<option value="${i}">Fila ${i + 1}</option>`
                             ).join('')}
                         </select>
-                        <label class="form-label">Segunda fila:</label>
-                        <select class="form-select mb-2" id="row2">
+                        <label class="block mb-2 text-sm font-medium">Segunda fila:</label>
+                        <select class="mb-3" id="row2">
                             ${Array.from({length: this.rows}, (_, i) => 
                                 `<option value="${i}">Fila ${i + 1}</option>`
                             ).join('')}
@@ -1380,14 +1565,6 @@
             }
         };
 
-
-
-
-
-
-
-
-
         // Inicialización
         document.addEventListener('DOMContentLoaded', () => {
             MathJax.Hub.Config({
@@ -1424,7 +1601,5 @@
             });
         });
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
